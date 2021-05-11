@@ -1,9 +1,9 @@
 import pandas as pd
 import streamlit as st
 from streamlit_CONST import WARN_INPUT_NOT_FOUND
-from streamlit_functions import find_closest, get_list_of_unique_most, get_results, fit_model, find_fuzzy
+from functions import find_closest, get_list_of_unique_most, get_results, fit_model, find_fuzzy
 
-df = pd.read_csv("./data/02_intermediate/foodflix.csv", index_col=0)
+df = pd.read_csv("./data/foodflix.csv", index_col=0)
 
 st.set_page_config(
     page_title="Foodflix",
