@@ -1,7 +1,6 @@
 import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
-from sentence_transformers import SentenceTransformer, models
-from streamlit_CONST import STOPS
+from CONST import STOPS
 from sklearn.metrics.pairwise import linear_kernel
 from fuzzywuzzy import process
 
@@ -26,14 +25,7 @@ def fit_model(df, method):
         model = CountVectorizer(analyzer='word', ngram_range=(1, 2),
                             min_df=0, stop_words=STOPS)
         X = model.fit_transform(df['content'])
-    elif method == "BERT":
-        word_embedding_model = models.Transformer('camembert-base')
-        pooling_model = models.Pooling(
-            word_embedding_model.get_word_embedding_dimension(),
-            pooling_mode_mean_tokens=True,
-            pooling_mode_max_tokens=False)
-        model = SentenceTransformer(modules=[word_embedding_model, pooling_model])
-        X = model.encode(df['content'], show_progress_bar=True)
+
     return model, X
 
 #=====================================================================#
@@ -94,6 +86,18 @@ def get_list_of_unique_most(series, thresh=100):
 #=====================================================================#
 
 def get_results(df, found, short):
+    """
+        get results from query and format
+    
+        params:
+            df: dataframe to look at
+            found: list of indexes of matching products
+    
+        returns:
+            a list with all matched products informations
+    """
+    
+
     results = []
 
     for i in found:

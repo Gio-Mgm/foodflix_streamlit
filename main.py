@@ -1,7 +1,7 @@
 import pandas as pd
 import streamlit as st
-from streamlit_CONST import WARN_INPUT_NOT_FOUND
-from functions import find_closest, get_list_of_unique_most, get_results, fit_model, find_fuzzy
+from CONST import WARN_INPUT_NOT_FOUND
+from functions import *
 
 df = pd.read_csv("./data/foodflix.csv", index_col=0)
 
@@ -24,7 +24,7 @@ st.title("Moteur de recommandation basé sur le contenu")
 
 st.sidebar.image("./assets/foodlix.png", output_format='PNG')
 
-method = st.sidebar.radio("Sélection de la méthode : ", ("TF-IDF", "CountVectorizer", "BERT"))
+method = st.sidebar.radio("Sélection de la méthode : ", ("TF-IDF", "CountVectorizer"))
 
 model, X = fit_model(df, method)
 
@@ -41,11 +41,11 @@ if user_input and not short:
 
 if user_input:
     show_results = True
-    container = st.empty()
+    empty = st.empty()
     if df["product_name"].to_string().find(user_input) == -1 or df["brands"].to_string().find(user_input) == -1:
         show_results = False
         
-        with container.beta_container():
+        with empty.beta_container():
             fuzzies = find_fuzzy(user_input, df["product_name"].to_list())
             
             choices = [fuzzy[0] for fuzzy in fuzzies]
@@ -59,7 +59,7 @@ if user_input:
             if radio != "":
                 user_input = radio
                 show_results = True
-                container.empty()
+                empty.empty()
 
     if show_results:
         found = find_closest(model, X, user_input, method)
